@@ -56,7 +56,6 @@ public class MessageController {
     }
 
     @RequestMapping(value = "/remove-all-by-userid", method = RequestMethod.POST)
-    @ResponseBody
     public String removeAllMessage() throws FacebookException {
         // TODO 特定ユーザの全メッセージを削除する
 
@@ -64,7 +63,6 @@ public class MessageController {
     }
 
     @RequestMapping(value = "/remove-by-userid", method = RequestMethod.POST)
-    @ResponseBody
     public String removeMessage(@RequestParam("???") final String messageId) throws FacebookException {
         // TODO 特定ユーザの特定のメッセージを削除する
 

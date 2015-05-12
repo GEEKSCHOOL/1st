@@ -18,6 +18,10 @@ public class MessageService {
         return MessageDatabase.getAllMessageList();
     }
 
+    public List<Message> getAllMessages(final String userId) {
+        return MessageDatabase.getAllMessageList(userId);
+    }
+
     // TODO C2.受け取ったメッセージをアプリに保存
     public String createMessage(final Facebook facebook, final String text) throws FacebookException {
         Message message = new Message();

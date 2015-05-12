@@ -22,35 +22,47 @@ public class MessageDatabase {
         return messageList;
     }
 
-    public static void addMessage(final Message model) {
-        String userId = model.getUserId();
-
-        List<Message> messageModelList = map.get(userId);
-        if (messageModelList == null) {
-            messageModelList = new ArrayList<>();
-            map.put(userId, messageModelList);
+    public static List<Message> getAllMessageList(final String userId) {
+        List<Message> messageList = map.get(userId);
+        if (messageList == null) {
+            return new ArrayList<>();
         }
-        messageModelList.add(model);
+
+        Collections.sort(messageList, (o1, o2) -> o1.getTime() < o2.getTime() ? 1 : -1);
+
+        return messageList;
+    }
+
+    public static void addMessage(final Message message) {
+        String userId = message.getUserId();
+
+        List<Message> messageList = map.get(userId);
+        if (messageList == null) {
+            messageList = new ArrayList<>();
+            map.put(userId, messageList);
+        }
+        messageList.add(message);
     }
 
     public static void removeMessage(final String userId, final String messageId) {
-        List<Message> messageModelList = map.get(userId);
-        if (messageModelList == null) {
+        List<Message> messageList = map.get(userId);
+        if (messageList == null) {
             return;
         }
 
-        Message removeModel = messageModelList.stream()
-                .filter(model -> model.getId().equals(messageId))
+        Message removeMessage = messageList.stream()
+                .filter(message -> message.getId().equals(messageId))
                 .findFirst()
                 .orElse(null);
 
-        if (removeModel != null) {
-            messageModelList.remove(removeModel);
+        if (removeMessage != null) {
+            messageList.remove(removeMessage);
         }
     }
 
     public static void removeAllMessage(final String userId) {
         map.remove(userId);
     }
+
 }
 

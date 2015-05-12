@@ -12,7 +12,7 @@ public class HelloController {
     @Autowired
     private HelloWorldService helloWorldService;
 
-    @RequestMapping("/")
+    @RequestMapping("/home")
     @ResponseBody
     public String home() {
         return helloWorldService.getHelloMessage();
