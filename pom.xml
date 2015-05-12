@@ -65,9 +65,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.facebook4j</groupId>
-            <artifactId>facebook4j-core</artifactId>
-            <version>2.2.2</version>
+            <groupId>org.twitter4j</groupId>
+            <artifactId>twitter4j-core</artifactId>
+            <version>4.0.3</version>
         </dependency>
 
     </dependencies>

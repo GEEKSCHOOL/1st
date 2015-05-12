@@ -1,16 +1,16 @@
 package jp.geekschool.web.security;
 
-import facebook4j.Facebook;
+import twitter4j.Twitter;
 
 public class Authentication {
 
-    private Facebook facebook;
+    private Twitter twitter;
 
-    public Facebook getFacebook() {
-        return facebook;
+    public Twitter getTwitter() {
+        return twitter;
     }
 
-    public void setFacebook(final Facebook facebook) {
-        this.facebook = facebook;
+    public void setTwitter(final Twitter twitter) {
+        this.twitter = twitter;
     }
 }

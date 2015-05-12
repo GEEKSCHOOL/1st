@@ -1,11 +1,13 @@
 package jp.geekschool.web.service;
 
-import facebook4j.Facebook;
-import facebook4j.FacebookException;
 import jp.geekschool.web.database.MessageDatabase;
 import jp.geekschool.web.model.Message;
 import org.springframework.stereotype.Service;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.User;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -22,24 +24,29 @@ public class MessageService {
         return MessageDatabase.getAllMessageList(userId);
     }
 
-    // TODO C2.受け取ったメッセージをアプリに保存
-    public String createMessage(final Facebook facebook, final String text) throws FacebookException {
+    public String createMessage(final Twitter twitter, final String text) throws TwitterException {
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        User user = twitter.verifyCredentials();
+
         Message message = new Message();
-        // Hint message.setText("今日はいい日ですね");
+        message.setId(DATE_TIME_FORMATTER.format(dateTime) + "_" + twitter.getId());
+        message.setUserId(String.valueOf(user.getId()));
+        message.setText(text);
+        message.setProfilePictureUrl(user.getMiniProfileImageURL());
+        message.setLocalDateTime(dateTime);
 
-        // Hint idを一意にするのによく時間を文字列に変換したものが使われます。
-        // Hint 現在時刻はLocalDateTime.now()で取得することができます。
-
+        MessageDatabase.addMessage(message);
 
         return null;
     }
 
     public void removeMessage(final String userId, final String messageId) {
-        // TODO 特定ユーザの特定のメッセージを削除する
+        MessageDatabase.removeMessage(userId, messageId);
     }
 
     public void removeMessageByUserId(final String userId) {
-        // TODO 特定ユーザの全メッセージを削除する
+        MessageDatabase.removeAllMessage(userId);
     }
 
 }

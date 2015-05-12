@@ -1,8 +1,6 @@
 package jp.geekschool.web.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import facebook4j.Facebook;
-import facebook4j.FacebookException;
 import jp.geekschool.web.security.AuthenticationHolder;
 import jp.geekschool.web.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.User;
 
 @Controller
 public class MessageController {
@@ -26,29 +26,27 @@ public class MessageController {
     protected MessageService messageService;
 
     @RequestMapping("/")
-    public String index(final Model model) throws FacebookException, JsonProcessingException {
-        Facebook facebook = AuthenticationHolder.getAuthentication().getFacebook();
+    public String index(final Model model) throws TwitterException, JsonProcessingException {
+        Twitter twitter = AuthenticationHolder.getAuthentication().getTwitter();
 
-        // TODO B1.画面に名前とプロフィール画像を表示
-        // Hint model.addAttribute("name", "atWare");
-        // Hint 同じく url にプロフィール画像のURLを設定する。
-        // Hint 画面を表示するHTMLの名前をこのメソッドの戻り値とする。
+        User user = twitter.verifyCredentials();
 
+        model.addAttribute("name", user.getName());
+        model.addAttribute("url", user.getMiniProfileImageURL());
+        model.addAttribute("messageList", messageService.getAllMessages());
+        model.addAttribute("id", String.valueOf(user.getId()));
+        model.addAttribute("existMyMessageList", !messageService.getAllMessages(String.valueOf(user.getId())).isEmpty());
 
-        // TODO C3.チャットのメッセージ表示
-
-
-        return "???";
+        return "index";
     }
 
-    // TODO C1. メッセージをブラウザから受け取る
-    @RequestMapping(value = "/???", method = RequestMethod.POST)
-    public String post(@RequestParam("???") final String text) throws FacebookException {
-        Facebook facebook = AuthenticationHolder.getAuthentication().getFacebook();
+    @RequestMapping(value = "/post-message", method = RequestMethod.POST)
+    public String post(@RequestParam("text") final String text) throws TwitterException {
+        Twitter twitter = AuthenticationHolder.getAuthentication().getTwitter();
 
-        messageService.createMessage(facebook, text);
+        messageService.createMessage(twitter, text);
 
-        return createRedirect("???");
+        return createRedirect("/");
     }
 
     private String createRedirect(final String requestUrl) {
@@ -56,17 +54,25 @@ public class MessageController {
     }
 
     @RequestMapping(value = "/remove-all-by-user-id", method = RequestMethod.POST)
-    public String removeAllMessage() throws FacebookException {
-        // TODO 特定ユーザの全メッセージを削除する
+    public String removeAllMessage() throws TwitterException {
+        Twitter twitter = AuthenticationHolder.getAuthentication().getTwitter();
 
-        return "ok";
+        User user = twitter.verifyCredentials();
+
+        messageService.removeMessageByUserId(String.valueOf(user.getId()));
+
+        return createRedirect("/");
     }
 
-    @RequestMapping(value = "/remove-by-user-id", method = RequestMethod.POST)
-    public String removeMessage(@RequestParam("???") final String messageId) throws FacebookException {
-        // TODO 特定ユーザの特定のメッセージを削除する
+    @RequestMapping(value = "/remove-by-message-id", method = RequestMethod.POST)
+    public String removeMessage(@RequestParam("messageId") final String messageId) throws TwitterException {
+        Twitter twitter = AuthenticationHolder.getAuthentication().getTwitter();
 
-        return "ok";
+        User user = twitter.verifyCredentials();
+
+        messageService.removeMessage(String.valueOf(user.getId()), messageId);
+
+        return createRedirect("/");
     }
 
 }

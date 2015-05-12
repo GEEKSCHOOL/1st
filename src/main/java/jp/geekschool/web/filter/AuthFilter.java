@@ -1,10 +1,12 @@
 package jp.geekschool.web.filter;
 
-import facebook4j.Facebook;
-import facebook4j.FacebookFactory;
 import jp.geekschool.web.security.Authentication;
 import jp.geekschool.web.security.AuthenticationHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.RequestToken;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,28 +19,36 @@ public class AuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
         try {
-            // TODO A. 認証されていない場合は認証を行う
-            // Hint 認証情報はHttpServletRequestのSessionにある
-
+            Twitter twitter = (Twitter) request.getSession().getAttribute("twitter");
+            if (twitter == null) {
+                redirectOAuthTwitter(request, response);
+                return;
+            }
 
             Authentication authentication = new Authentication();
-            authentication.setFacebook(/*???*/null/*???*/);
+            authentication.setTwitter(twitter);
             AuthenticationHolder.setAuthentication(authentication);
 
             filterChain.doFilter(request, response);
+        } catch (TwitterException e) {
+            throw new ServletException(e);
         } finally {
             AuthenticationHolder.clearAuthentication();
         }
     }
 
-    private void redirectOAuthFacebook(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    private void redirectOAuthTwitter(final HttpServletRequest request, final HttpServletResponse response) throws IOException, TwitterException {
+        Twitter twitter = new TwitterFactory().getInstance();
+        request.getSession().setAttribute("twitter", twitter);
+
         StringBuffer callbackURL = request.getRequestURL();
-        callbackURL.replace(callbackURL.lastIndexOf("/"), callbackURL.length(), "").append("/facebook/callback");
+        callbackURL.replace(callbackURL.lastIndexOf("/"), callbackURL.length(), "").append("/twitter/callback");
 
-        Facebook facebook = new FacebookFactory().getInstance();
-        request.getSession().setAttribute("facebook", facebook);
+        RequestToken requestToken = twitter.getOAuthRequestToken(callbackURL.toString());
 
-        response.sendRedirect(facebook.getOAuthAuthorizationURL(callbackURL.toString()));
+        request.getSession().setAttribute("requestToken", requestToken);
+
+        response.sendRedirect(requestToken.getAuthorizationURL());
     }
 
 }
