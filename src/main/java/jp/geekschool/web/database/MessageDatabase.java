@@ -15,7 +15,7 @@ public class MessageDatabase {
     public static List<Message> getAllMessageList() {
         List<Message> messageList = new ArrayList<>();
 
-        map.keySet().forEach(key -> messageList.addAll(map.get(key)));
+        map.keySet().forEach(key -> messageList.addAll(map.getOrDefault(key, new ArrayList<>())));
 
         Collections.sort(messageList, (o1, o2) -> o1.getTime() < o2.getTime() ? 1 : -1);
 
@@ -23,10 +23,7 @@ public class MessageDatabase {
     }
 
     public static List<Message> getAllMessageList(final String userId) {
-        List<Message> messageList = map.get(userId);
-        if (messageList == null) {
-            return new ArrayList<>();
-        }
+        List<Message> messageList = map.getOrDefault(userId, new ArrayList<>());
 
         Collections.sort(messageList, (o1, o2) -> o1.getTime() < o2.getTime() ? 1 : -1);
 
@@ -45,10 +42,7 @@ public class MessageDatabase {
     }
 
     public static void removeMessage(final String userId, final String messageId) {
-        List<Message> messageList = map.get(userId);
-        if (messageList == null) {
-            return;
-        }
+        List<Message> messageList = map.getOrDefault(userId, new ArrayList<>());
 
         Message removeMessage = messageList.stream()
                 .filter(message -> message.getId().equals(messageId))
