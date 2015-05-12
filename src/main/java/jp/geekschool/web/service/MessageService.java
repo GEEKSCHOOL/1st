@@ -6,6 +6,7 @@ import jp.geekschool.web.database.MessageDatabase;
 import jp.geekschool.web.model.Message;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -22,24 +23,27 @@ public class MessageService {
         return MessageDatabase.getAllMessageList(userId);
     }
 
-    // TODO C2.受け取ったメッセージをアプリに保存
     public String createMessage(final Facebook facebook, final String text) throws FacebookException {
+        LocalDateTime dateTime = LocalDateTime.now();
+
         Message message = new Message();
-        // Hint message.setText("今日はいい日ですね");
+        message.setId(DATE_TIME_FORMATTER.format(dateTime) + "_" + facebook.getId());
+        message.setUserId(facebook.getId());
+        message.setText(text);
+        message.setProfilePictureUrl(facebook.getPictureURL().toString());
+        message.setLocalDateTime(dateTime);
 
-        // Hint idを一意にするのによく時間を文字列に変換したものが使われます。
-        // Hint 現在時刻はLocalDateTime.now()で取得することができます。
-
+        MessageDatabase.addMessage(message);
 
         return null;
     }
 
     public void removeMessage(final String userId, final String messageId) {
-        // TODO 特定ユーザの特定のメッセージを削除する
+        MessageDatabase.removeMessage(userId, messageId);
     }
 
     public void removeMessageByUserId(final String userId) {
-        // TODO 特定ユーザの全メッセージを削除する
+        MessageDatabase.removeAllMessage(userId);
     }
 
 }

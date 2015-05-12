@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MessageController {
@@ -29,26 +28,22 @@ public class MessageController {
     public String index(final Model model) throws FacebookException, JsonProcessingException {
         Facebook facebook = AuthenticationHolder.getAuthentication().getFacebook();
 
-        // TODO B1.画面に名前とプロフィール画像を表示
-        // Hint model.addAttribute("name", "atWare");
-        // Hint 同じく url にプロフィール画像のURLを設定する。
-        // Hint 画面を表示するHTMLの名前をこのメソッドの戻り値とする。
+        model.addAttribute("name", facebook.getMe().getName());
+        model.addAttribute("url", facebook.getPictureURL().toString());
+        model.addAttribute("messageList", messageService.getAllMessages());
+        model.addAttribute("id", facebook.getId());
+        model.addAttribute("existMyMessageList", !messageService.getAllMessages(facebook.getId()).isEmpty());
 
-
-        // TODO C3.チャットのメッセージ表示
-
-
-        return "???";
+        return "index";
     }
 
-    // TODO C1. メッセージをブラウザから受け取る
-    @RequestMapping(value = "/???", method = RequestMethod.POST)
-    public String post(@RequestParam("???") final String text) throws FacebookException {
+    @RequestMapping(value = "/post-message", method = RequestMethod.POST)
+    public String post(@RequestParam("text") final String text) throws FacebookException {
         Facebook facebook = AuthenticationHolder.getAuthentication().getFacebook();
 
         messageService.createMessage(facebook, text);
 
-        return createRedirect("???");
+        return createRedirect("/");
     }
 
     private String createRedirect(final String requestUrl) {
@@ -57,16 +52,20 @@ public class MessageController {
 
     @RequestMapping(value = "/remove-all-by-user-id", method = RequestMethod.POST)
     public String removeAllMessage() throws FacebookException {
-        // TODO 特定ユーザの全メッセージを削除する
+        Facebook facebook = AuthenticationHolder.getAuthentication().getFacebook();
 
-        return "ok";
+        messageService.removeMessageByUserId(facebook.getId());
+
+        return createRedirect("/");
     }
 
-    @RequestMapping(value = "/remove-by-user-id", method = RequestMethod.POST)
-    public String removeMessage(@RequestParam("???") final String messageId) throws FacebookException {
-        // TODO 特定ユーザの特定のメッセージを削除する
+    @RequestMapping(value = "/remove-by-message-id", method = RequestMethod.POST)
+    public String removeMessage(@RequestParam("messageId") final String messageId) throws FacebookException {
+        Facebook facebook = AuthenticationHolder.getAuthentication().getFacebook();
 
-        return "ok";
+        messageService.removeMessage(facebook.getId(), messageId);
+
+        return createRedirect("/");
     }
 
 }

@@ -17,12 +17,14 @@ public class AuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
         try {
-            // TODO A. 認証されていない場合は認証を行う
-            // Hint 認証情報はHttpServletRequestのSessionにある
-
+            Facebook facebook = (Facebook) request.getSession().getAttribute("facebook");
+            if (facebook == null) {
+                redirectOAuthFacebook(request, response);
+                return;
+            }
 
             Authentication authentication = new Authentication();
-            authentication.setFacebook(/*???*/null/*???*/);
+            authentication.setFacebook(facebook);
             AuthenticationHolder.setAuthentication(authentication);
 
             filterChain.doFilter(request, response);
