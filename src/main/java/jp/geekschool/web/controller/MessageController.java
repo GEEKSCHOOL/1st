@@ -61,7 +61,6 @@ public class MessageController {
 
         return "ok";
     }
-rikuesuto
 
     @RequestMapping(value = "/remove-by-user-id", method = RequestMethod.POST)
     public String removeMessage(@RequestParam("???") final String messageId) throws FacebookException {
