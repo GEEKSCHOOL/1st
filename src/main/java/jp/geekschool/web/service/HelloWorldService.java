@@ -1,8 +1,8 @@
-package jp.co.atware.geekschool.web.service;
+package jp.geekschool.web.service;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class HelloWorldService {
 
     public String getHelloMessage() {

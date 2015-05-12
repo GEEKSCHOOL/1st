@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <title>Index HTML</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet"/>
+    <style type="text/css">
+        .msg-icon {
+            width: 35px;
+            height: 35px;
+            margin-right: 10px;
+        }
+
+        .msg {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 text-left">
+            <h1>GEEK SCHOOL 1st</h1>
+        </div>
+        <div class="col-md-6 text-right">
+            <img th:src="${url}"/><span th:text="${name}"></span>
+        </div>
+    </div>
+
+    <form action="post-message" method="post">
+        <input type="text" name="text"/>
+        <input type="submit" class="btn btn-default btn-sm" value="送信"/>
+    </form>
+    <br/>
+
+    <table class="table">
+        <tr>
+            <th>
+                <div class="col-md-9 text-left">
+                    Message
+                </div>
+                <div class="col-md-3 text-right">
+                    <form action="remove-all-by-userid" method="post">
+                        <button class="btn btn-danger btn-sm text-right all-msg-remove"><span class="glyphicon glyphicon-remove"></span> 全削除</button>
+                    </form>
+                </div>
+            </th>
+        </tr>
+        <tr th:each="msg : ${messageList}">
+            <td>
+                <div class="col-md-9">
+                    <img class="msg-icon" th:src="${msg.profilePictureUrl}"/><span class="msg" th:text="${msg.text}"></span>
+                </div>
+                <div class="col-md-3 text-right">
+                    <input class="msg-id" type="hidden" th:value="${msg.id}"/>
+                    <button class="btn btn-danger btn-sm text-right msg-remove"><span class="glyphicon glyphicon-remove"></span> 削除</button>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    (function() {
+        $('.msg-remove').click(function() {
+            if (!confirm('このメッセージを削除します\nよろしいですか？')) {
+                return false;
+            }
+
+            var messageId = $(this).parent().find('.msg-id').val();
+            $.ajax({
+                type: 'DELETE',
+                url: 'message?mId=' + messageId,
+                success: function() {
+                    location.href = "/";
+                }
+            });
+        });
+
+        $('.all-msg-remove').click(function() {
+            if (!confirm('自分の投稿したメッセージを全て削除します\nよろしいですか？')) {
+                return false;
+            }
+
+            $.ajax({
+                type: 'DELETE',
+                url: 'message?type=all',
+                success: function() {
+                    location.href = "/";
+                }
+            });
+        })
+    })();
+</script>
+</body>
+</html>
