@@ -55,14 +55,15 @@ public class MessageController {
         return "redirect:" + requestUrl;
     }
 
-    @RequestMapping(value = "/remove-all-by-userid", method = RequestMethod.POST)
+    @RequestMapping(value = "/remove-all-by-user-id", method = RequestMethod.POST)
     public String removeAllMessage() throws FacebookException {
         // TODO 特定ユーザの全メッセージを削除する
 
         return "ok";
     }
+rikuesuto
 
-    @RequestMapping(value = "/remove-by-userid", method = RequestMethod.POST)
+    @RequestMapping(value = "/remove-by-user-id", method = RequestMethod.POST)
     public String removeMessage(@RequestParam("???") final String messageId) throws FacebookException {
         // TODO 特定ユーザの特定のメッセージを削除する
 
