@@ -36,7 +36,7 @@ public class MessageController {
 
 
         // TODO C3.チャットのメッセージ表示
-
+        // Hint model.addAttribute("messageList", 全ユーザの全メッセージ);
 
         return "???";
     }

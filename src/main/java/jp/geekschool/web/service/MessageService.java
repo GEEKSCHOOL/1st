@@ -27,10 +27,6 @@ public class MessageService {
         Message message = new Message();
         // Hint message.setText("今日はいい日ですね");
 
-        // Hint idを一意にするのによく時間を文字列に変換したものが使われます。
-        // Hint 現在時刻はLocalDateTime.now()で取得することができます。
-
-
         return null;
     }
 
