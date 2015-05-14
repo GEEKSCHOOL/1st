@@ -1,6 +1,5 @@
 package jp.geekschool.web.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
 import jp.geekschool.web.security.AuthenticationHolder;
@@ -11,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MessageController {
@@ -26,7 +24,7 @@ public class MessageController {
     protected MessageService messageService;
 
     @RequestMapping("/")
-    public String index(final Model model) throws FacebookException, JsonProcessingException {
+    public String index(final Model model) throws FacebookException {
         Facebook facebook = AuthenticationHolder.getAuthentication().getFacebook();
 
         // TODO B1.画面に名前とプロフィール画像を表示
