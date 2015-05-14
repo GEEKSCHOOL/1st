@@ -1,4 +1,4 @@
-# GEEK SCHOOL 1st JavaによるWeb開発の最前線
+# JavaによるWeb開発の最前線
 
 ## 目標
 * いまどきのJavaを使ったWEB開発を知ってもらう
@@ -110,5 +110,9 @@ MessageController#index
  2. １分以内の同じメッセージの投稿禁止
  3. 自分でFacebook Developerに登録し、自分のアプリとしてデプロイを行う
  4. Twitterなど他の認証機構との接続
- 
-※Githubからforkしてから進めてください
+
+# 使用技術
+ * [Facebook4J](http://facebook4j.org/ja/)
+ * [Spring Boot](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
+ * [Spring MVC](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html)
+ * [Thymeleaf](http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf_ja.html)
