@@ -23,11 +23,12 @@ public class MessageService {
     }
 
     // TODO C2.受け取ったメッセージをアプリに保存
-    public String createMessage(final Facebook facebook, final String text) throws FacebookException {
+    public void createMessage(final Facebook facebook, final String text) throws FacebookException {
         Message message = new Message();
         // Hint message.setText("今日はいい日ですね");
 
-        return null;
+        // Hint メッセージをアプリに保存する
+
     }
 
     public void removeMessage(final String userId, final String messageId) {
