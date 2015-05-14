@@ -3,7 +3,7 @@ package jp.geekschool.web.database;
 import jp.geekschool.web.model.Message;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,7 @@ public class MessageDatabase {
 
         map.keySet().forEach(key -> messageList.addAll(map.getOrDefault(key, new ArrayList<>())));
 
-        Collections.sort(messageList, (o1, o2) -> o1.getTime() < o2.getTime() ? 1 : -1);
+        messageList.sort(Comparator.comparing(Message::getTime, Comparator.<Long>reverseOrder()));
 
         return messageList;
     }
@@ -25,7 +25,7 @@ public class MessageDatabase {
     public static List<Message> getAllMessageList(final String userId) {
         List<Message> messageList = map.getOrDefault(userId, new ArrayList<>());
 
-        Collections.sort(messageList, (o1, o2) -> o1.getTime() < o2.getTime() ? 1 : -1);
+        messageList.sort(Comparator.comparing(Message::getTime, Comparator.<Long>reverseOrder()));
 
         return messageList;
     }

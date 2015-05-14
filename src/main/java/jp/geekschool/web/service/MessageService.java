@@ -23,7 +23,7 @@ public class MessageService {
         return MessageDatabase.getAllMessageList(userId);
     }
 
-    public String createMessage(final Facebook facebook, final String text) throws FacebookException {
+    public void createMessage(final Facebook facebook, final String text) throws FacebookException {
         LocalDateTime dateTime = LocalDateTime.now();
 
         Message message = new Message();
@@ -34,8 +34,6 @@ public class MessageService {
         message.setLocalDateTime(dateTime);
 
         MessageDatabase.addMessage(message);
-
-        return null;
     }
 
     public void removeMessage(final String userId, final String messageId) {
