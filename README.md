@@ -1,4 +1,4 @@
-# JavaによるWeb開発の最前線
+# JavaによるWeb開発の最前線 GEEKSCHOOL vol1 2015/5/14
 
 ## 目標
 * いまどきのJavaを使ったWEB開発を知ってもらう
